@@ -92,7 +92,7 @@ def get_frequencies(session, experiment=None):
 def getvar(expt, variable, session, ncfile=None, n=None,
            start_time=None, end_time=None, chunks=None,
            time_units=None, offset=None, decode_times=True,
-           check_present=False):
+           check_present=False,parallel_load=True):
     """For a given experiment, return an xarray DataArray containing the
     specified variable.
     
@@ -182,7 +182,8 @@ def getvar(expt, variable, session, ncfile=None, n=None,
     # I found that it was important to "preprocess" to select only
     # the relevant variable, because chunking doesn't apply to
     # all variables present in the file
-    ds = xr.open_mfdataset((str(f.NCFile.ncfile_path) for f in ncfiles), parallel=True,
+    ds = xr.open_mfdataset((str(f.NCFile.ncfile_path) for f in ncfiles),
+                           parallel=parallel_load,combine='by_coords',
                            chunks=file_chunks,
                            decode_times=False,
                            preprocess=lambda d: d[variable].to_dataset() if variable not in d.coords else d)
