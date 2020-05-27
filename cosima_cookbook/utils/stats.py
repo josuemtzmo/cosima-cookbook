@@ -1,6 +1,6 @@
 import xarray as xr
 import numpy as np
-import scipy
+import scipy.stats as sstats
 import dask.array as dsa
 
 class Mann_Kendall_test(object):
@@ -85,8 +85,8 @@ class Mann_Kendall_test(object):
         Compute significance (p) and hypotesis (h).
             h = true (false) if trends are significant (insignificant).
         """
-        p = 2*(1-scipy.stats.norm.cdf(abs(self.z_test)))
-        h = abs(self.z_test) > scipy.stats.norm.ppf(1-self.alpha/2)
+        p = 2*(1-sstats.norm.cdf(abs(self.z_test)))
+        h = abs(self.z_test) > sstats.norm.ppf(1-self.alpha/2)
         return p,h
     
     def _pre_computation(self,y):
@@ -122,9 +122,9 @@ class Mann_Kendall_test(object):
         self.var_s = self.VAR_score()
 
         if self.method == 'linregress':
-            slope,intercept = scipy.stats.linregress(self.x, self.y)[0:2]
+            slope,intercept = sstats.linregress(self.x, self.y)[0:2]
         elif self.method == 'theilslopes':
-            slope,intercept = scipy.stats.mstats.theilslopes(self.y, self.x, self.alpha)[0:2]
+            slope,intercept = sstats.mstats.theilslopes(self.y, self.x, self.alpha)[0:2]
         else:
             raise ValueError('Define a method')
 
