@@ -4,6 +4,6 @@ python:
 install:
   - pip install .[build]
 script: 
-  - pytest --cov=cosima-cookbook
+  - pytest --cov=cosima_cookbook
 after_success:
   -  bash <(curl -s https://codecov.io/bash)
