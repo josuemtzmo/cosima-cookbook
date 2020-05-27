@@ -49,7 +49,7 @@ def test_slope_methods():
     MK_class_lr = stats.Mann_Kendall_test(da, 'time',method='linregress')
     MK_trends_lr = MK_class_lr.compute(path='./tmp.nc')
     MK_class_ts = stats.Mann_Kendall_test(da, 'time',method='theilslopes')
-    MK_trends_ts = MK_class_ts.compute(save=True,path='./tmp.nc')
+    MK_trends_ts = MK_class_ts.compute(save = True)
 
     os.remove('./tmp.nc')
     assert(np.isclose(MK_trends_lr.trend.values, MK_trends_ts.trend.values).all())
@@ -86,6 +86,50 @@ def test_slope_methods_fail():
     MK_class_ts = stats.Mann_Kendall_test(da, 'time',method='')
     with pytest.raises(ValueError):
         MK_trends_ts = MK_class_ts.compute() 
+
+def test_slope_with_nan():
+    # Assert if function works with nan values.
+    n=100
+    da = linear_trend_noise(0,n,1/5)
+    da_masked = da.where(~np.logical_and(da.lon<2,da.lat>2))
+
+    MK_class = stats.Mann_Kendall_test(da_masked, 'time',alpha=0.1)
+    MK_trends = MK_class.compute()
+
+    values=MK_trends.signif.values
+
+    assert(values[np.isfinite(MK_trends.trend.values)].all() == 1)
+
+def test_slope_with_nan_MK_modif():
+    # Assert if function works with nan values.
+    n=100
+    da = linear_trend_noise(0,n,1/5)
+    da_masked = da.where(~np.logical_and(da.lon<2,da.lat>2))
+
+    MK_class = stats.Mann_Kendall_test(da_masked, 'time', MK_modified=True, alpha=0.1)
+    MK_trends = MK_class.compute()
+
+    values=MK_trends.signif.values
+    assert(values[np.isfinite(MK_trends.trend.values)].all() == 1)
+
+
+def test_no_slope():
+    # Assert if function works with nan values.
+    n=100
+    da = linear_trend_noise(0,n,1/5)*0
+
+    MK_class = stats.Mann_Kendall_test(da, 'time', alpha=0.1)
+    MK_trends = MK_class.compute()
+
+    assert(MK_trends.signif.values.all() == MK_class.score)
+
+
+def test_rename():
+    # Assert if function works with nan values.
+    n=100
+    da = linear_trend_noise(0,n,1/5).rename({'lon':'x','lat':'y'})
+    MK_class = stats.Mann_Kendall_test(da, 'time', alpha=0.1,coords_name={'lon':'x','lat':'y'})
+    MK_trends = MK_class.compute()
 
 def test_main():
     stats.init('__main__')

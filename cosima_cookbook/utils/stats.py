@@ -29,7 +29,9 @@ class Mann_Kendall_test(object):
 
     def __init__(self,DataArray,dim,alpha=0.01,MK_modified=False,method='linregress',coords_name=None):
         if coords_name:
-            self.DataArray = DataArray.rename({item:key for key,item in coords_name.items()})
+            self.DataArray = DataArray.rename({(item if np.logical_or(key == "lon", key=="lat") else key):
+                                                (key if np.logical_or(key == "lon", key=="lat") else item) 
+                                                for key,item in coords_name.items()})
         else:
             self.DataArray = DataArray
         self.dim = dim
@@ -99,9 +101,10 @@ class Mann_Kendall_test(object):
         
     def _check_length(self):
         # Make sure that x and y have the same length and they are not empty.
-        if not self.x.size > 0 or not self.y.size > 0:
-            self.x=np.array([0,0])
-            self.y=np.array([0,0])
+        if not self.x.size > 0 or not self.y.size > 0 or self.n ==0:
+            self.x = np.array([0,0])
+            self.y = np.array([0,0])
+            self.n = len(self.y)
 
     def _auto_correlation(self,y_detrend,nlags):
         y = self.y - self.y.mean()
@@ -170,9 +173,9 @@ class Mann_Kendall_test(object):
                         coords={'lon': (['lon'], self.DataArray.lon),
                                 'lat': (['lat'], self.DataArray.lat)})
         ds.compute()
-        if save or path != None:
+        if path != None:
             ds.to_netcdf(path)
-        elif save:
+        elif save and path == None:
             ds.to_netcdf('./tmp.nc')
         return ds
 

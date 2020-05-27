@@ -1,8 +1,8 @@
 # cosima-cookbook
 
-| Travis CI | Read the Docs | 
-|:---------:|:-------------:|
-| [![Travis CI Build Status](https://travis-ci.org/COSIMA/cosima-cookbook.svg?branch=master)](https://travis-ci.org/COSIMA/cosima-cookbook) | [![Documentation Status](https://readthedocs.org/projects/cosima-cookbook/badge/?version=latest)](https://cosima-cookbook.readthedocs.org/en/latest) |
+| Travis CI | Read the Docs |  Codecov | 
+|:---------:|:-------------:|:--------:|
+| [![Travis CI Build Status](https://travis-ci.org/COSIMA/cosima-cookbook.svg?branch=master)](https://travis-ci.org/COSIMA/cosima-cookbook) | [![Documentation Status](https://readthedocs.org/projects/cosima-cookbook/badge/?version=latest)](https://cosima-cookbook.readthedocs.org/en/latest) | [![codecov](https://codecov.io/gh/josuemtzmo/cosima-cookbook/branch/master/graph/badge.svg)](https://codecov.io/gh/josuemtzmo/cosima-cookbook) |
 
 
 The COSIMA Cookbook is a framework for analysing output from ocean-sea ice models. The focus is on the ACCESS-OM2 suite of models being developed and run by members of [COSIMA: Consortium for Ocean-Sea Ice Modelling in Australia](http://cosima.org.au). But this framework is suited to analysing any MOM5/MOM6 output, as well as output from other models.
